@@ -71,8 +71,13 @@ body {
   transition: background-color 0.2s;
 }
 
-.circle-btn:hover {
+.circle-btn:hover:enabled {
   background-color: #0056b3;
+}
+
+.circle-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Responsive for smaller screens */
