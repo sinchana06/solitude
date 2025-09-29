@@ -5,7 +5,7 @@ import cors from 'cors';
 const app = express();
 app.use(cors()); // allow your React app to call this
 
-const ARDUINO_IP = 'http://10.119.132.172'; // your local Arduino IP
+const ARDUINO_IP = 'http://10.135.29.173'; // your local Arduino IP
 
 app.get('/api/weight', async (req, res) => {
   try {
