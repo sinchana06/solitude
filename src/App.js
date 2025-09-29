@@ -10,7 +10,7 @@ function App() {
   const [weightHistory, setWeightHistory] = useState([]); // store weight over time
   const [graphRunning, setGraphRunning] = useState(false); // start graph on test click
   const [testDisabled, setTestDisabled] = useState(true)
-  const ARDUINO_IP = "http://10.135.29.173"; 
+  const ARDUINO_IP = "https://50540093470d.ngrok-free.app"; 
 
   // Poll Arduino to check if it's online and get current weight
 useEffect(() => {
@@ -105,10 +105,11 @@ if (!res.ok) throw new Error("No response from Arduino");
             <LineChart data={weightHistory}>
               <CartesianGrid stroke="#ccc" />
               <XAxis dataKey="time" />
-              <YAxis domain={[-1000, 1000]}
+              <YAxis domain={[-1000, 10000]}
               interval={0} 
       tickFormatter={(value) => `${value}`} 
-      ticks={[-1000, -900, -800, -700, -600, -500, -400, -300, -200, -100, 0,100,200,300,400,500,600,700,800,900,1000]}/>
+      // ticks={[-1000, -900, -800, -700, -600, -500, -400, -300, -200, -100, 0,100,200,300,400,500,600,700,800,900,1000]}/
+      />
               <Tooltip />
               <Line type="monotone" dataKey="weight" stroke="#00ff00" dot={false} isAnimationActive={false}
 />
