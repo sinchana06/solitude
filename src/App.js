@@ -27,7 +27,7 @@ function App() {
     client.on("message", (topic, message) => {
   if (topic === "arduino/sensor/weight") {
     const msgStr = message.toString();       // e.g., "Weight 123"
-    const value = parseFloat(msgStr.replace(/\D/g, "")) || 0; // extract number
+   const value = parseFloat(msgStr.replace(/[^\d.]/g, "")) || 0;
 console.log("weight for now", value)
     const timestamp = new Date().toLocaleTimeString();
 
