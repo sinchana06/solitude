@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
 import "./App.css";
+import mqtt from 'mqtt';
+
 
 function App() {
   const [loadCellOn, setLoadCellOn] = useState('PENDING');
@@ -12,37 +14,39 @@ function App() {
   const [testDisabled, setTestDisabled] = useState(true)
   const ARDUINO_IP = "https://50540093470d.ngrok-free.app"; 
 
-  // Poll Arduino to check if it's online and get current weight
-useEffect(() => {
-    let cancelled = false;
 
-    const pollWeight = async () => {
-      if (cancelled) return;
+  useEffect(() => {
+    // Connect to HiveMQ public broker via WebSocket
+    const client = mqtt.connect("wss://broker.hivemq.com:8884/mqtt");
 
-      try {
-        const res = await fetch(ARDUINO_IP);
-        if (!res.ok) throw new Error("No response");
+    client.on("connect", () => {
+      console.log("Connected to MQTT broker");
+      client.subscribe("arduino/sensor/weight"); // same topic your Arduino publishes to
+    });
 
-        const data = await res.json();
-        setWeight(data.weight);
+    client.on("message", (topic, message) => {
+  if (topic === "arduino/sensor/weight") {
+    const msgStr = message.toString();       // e.g., "Weight 123"
+    const value = parseFloat(msgStr.replace(/\D/g, "")) || 0; // extract number
 
-        const timestamp = new Date().toLocaleTimeString();
-        setWeightHistory(prev => [
-          ...prev.slice(-49),
-          { time: timestamp, weight: data.weight }
-        ]);
+    const timestamp = new Date().toLocaleTimeString();
 
-        setLoadCellOn("ON");
-      } catch (err) {
-        console.error("Failed fetch:", err);
-        setLoadCellOn('OFF')
-      } finally {
-        if (!cancelled) setTimeout(pollWeight, 1000); // next fetch after previous finishes
-      }
+    // Update graph state
+    setWeight(value);
+    setWeightHistory(prev => [
+      ...prev.slice(-49),                  // keep last 50 points
+      { time: timestamp, weight: value }
+    ]);
+     setLoadCellOn(value ? "ON" : "OFF");
+  }
+});
+
+
+    return () => {
+      client.end(); // disconnect on component unmount
     };
-    pollWeight();
-    return () => { cancelled = true; };
   }, []);
+
 
   const toggleCheck = (index) => {
     const newChecked = [...checkedItems];
@@ -76,7 +80,7 @@ if (!res.ok) throw new Error("No response from Arduino");
       </div>
 
       <ul className="checklist">
-        {["Distance", "Stopper", "Kissing sinchana"].map((item, index) => (
+        {["Distance", "Stopper", "final"].map((item, index) => (
           <li key={index}>
             <label>
               <input type="checkbox" checked={checkedItems[index]} onChange={() => toggleCheck(index)} />
@@ -105,7 +109,7 @@ if (!res.ok) throw new Error("No response from Arduino");
             <LineChart data={weightHistory}>
               <CartesianGrid stroke="#ccc" />
               <XAxis dataKey="time" />
-              <YAxis domain={[-1000, 10000]}
+              <YAxis domain={[-1000, 1000]}
               interval={0} 
       tickFormatter={(value) => `${value}`} 
       // ticks={[-1000, -900, -800, -700, -600, -500, -400, -300, -200, -100, 0,100,200,300,400,500,600,700,800,900,1000]}/

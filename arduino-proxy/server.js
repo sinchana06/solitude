@@ -18,6 +18,6 @@ app.get('/api/weight', async (req, res) => {
   }
 });
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log('Proxy server running');
+app.listen(process.env.PORT || 3001, () => {
+  console.log('Proxy server running', process.env.PORT);
 });
