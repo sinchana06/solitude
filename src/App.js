@@ -28,7 +28,7 @@ function App() {
   if (topic === "arduino/sensor/weight") {
     const msgStr = message.toString();       // e.g., "Weight 123"
     const value = parseFloat(msgStr.replace(/\D/g, "")) || 0; // extract number
-console.log(value)
+console.log("weight for now", value)
     const timestamp = new Date().toLocaleTimeString();
 
     // Update graph state
