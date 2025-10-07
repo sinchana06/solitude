@@ -241,7 +241,7 @@ const CustomTooltip = ({ active, payload }) => {
       {graphRunning && (
         <>
         <div className="weight-title-container">
-          <h2 style={{flex:1}}>Weight Graph</h2>
+          <h3 style={{flex:0.8, textAlign:"left"}}>Weight Graph</h3>
           <span
         style={{ cursor: "pointer", alignContent: "flex-end", margin:"0px 10px" }}
         title="Download All Weight Data"
@@ -253,7 +253,7 @@ const CustomTooltip = ({ active, payload }) => {
         </svg>
       </span>
       </div>
-          <ResponsiveContainer width={400} height={400} className={"weight-graph"}>
+          <ResponsiveContainer width={480} height={480} className={"weight-graph"}>
             <LineChart data={weightHistory}>
               <CartesianGrid stroke="#ccc" />
               <XAxis dataKey="time" />

@@ -13,7 +13,11 @@ body {
   padding: 20px;
   text-align: center;
 }
-
+  .weight-title-container{
+display: flex;
+align-items: center;
+justify-content: center;
+  }
 .heading {
   margin-top: 20px;
   margin-bottom: 30px;
@@ -84,7 +88,7 @@ body {
 @media (max-width: 400px) {
   .container {
   max-width: 400px;
-  padding: 50px;
+  padding: 20px;
 }
 body {
   margin: 0;
@@ -108,6 +112,7 @@ body {
   .weight-title-container{
 display: flex;
 align-items: center;
+justify-content: flex-start;
   }
   .weight-graph{
     width: 300px !important;
