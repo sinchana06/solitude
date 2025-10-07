@@ -182,8 +182,14 @@ function App() {
           className="circle-btn"
           disabled={testDisabled || !isConnected}
           onClick={handleIgnition}
+          style={{
+            backgroundColor: relayStatus === "ON" ? "green" : "",
+            color: relayStatus === "ON" ? "white" : ""
+          }}
         >
-          Fire
+          {relayStatus === "ON" && relayCountdown > 0
+            ? `Fire (${relayCountdown}s)`
+            : "Fire"}
         </button>
       </div>
 
