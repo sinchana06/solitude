@@ -15,37 +15,50 @@ function App() {
   const [loadCellOn, setLoadCellOn] = useState("PENDING");
   const [checkedItems, setCheckedItems] = useState([false, false, false]);
   const [weight, setWeight] = useState(0);
-  const [weightHistory, setWeightHistory] = useState([]); // store weight over time
-  const [graphRunning, setGraphRunning] = useState(false); // start graph on test click
+  const [weightHistory, setWeightHistory] = useState([]);
+  const [graphRunning, setGraphRunning] = useState(false);
   const [testDisabled, setTestDisabled] = useState(true);
 
   const [client, setClient] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
 
-  const MQTT_BROKER = "wss://broker.hivemq.com:8000/mqtt"; // HiveMQ WebSocket
-  const FIRE_TOPIC = "arduino/relay/fire";                 // Arduino listens here
+  // ---------------- MQTT SETTINGS ----------------
+  const MQTT_BROKER = "wss://broker.hivemq.com:8884/mqtt"; // SSL WebSocket
+  const WEIGHT_TOPIC = "arduino/sensor/weight";
+  const FIRE_TOPIC = "arduino/relay/fire";
 
   // ---------------- MQTT SETUP ----------------
   useEffect(() => {
-    const mqttClient = mqtt.connect(MQTT_BROKER);
+    const mqttClient = mqtt.connect(MQTT_BROKER, {
+      reconnectPeriod: 5000, // reconnect every 5 seconds if disconnected
+    });
 
     mqttClient.on("connect", () => {
       console.log("✅ Connected to MQTT broker");
       setIsConnected(true);
-      mqttClient.subscribe("arduino/sensor/weight"); // subscribe to weight updates
+      mqttClient.subscribe(WEIGHT_TOPIC, (err) => {
+        if (!err) console.log(`Subscribed to ${WEIGHT_TOPIC}`);
+        else console.log("❌ Subscribe error:", err);
+      });
+    });
+
+    mqttClient.on("reconnect", () => console.log("🔄 Reconnecting to MQTT..."));
+    mqttClient.on("error", (err) => console.log("❌ MQTT Error:", err));
+    mqttClient.on("close", () => {
+      console.log("⚠️ MQTT connection closed");
+      setIsConnected(false);
     });
 
     mqttClient.on("message", (topic, message) => {
-      if (topic === "arduino/sensor/weight") {
-        const msgStr = message.toString(); // e.g., "Weight 123"
+      if (topic === WEIGHT_TOPIC) {
+        const msgStr = message.toString();
         const value = parseFloat(msgStr.replace("Weight: ", "")) || 0;
-        console.log("weight for now", value);
-
         const timestamp = new Date().toLocaleTimeString();
+
         setWeight(value);
         setWeightHistory((prev) => [
-          ...prev.slice(-49), // keep last 50 points
-          { time: timestamp, weight: value }
+          ...prev.slice(-49),
+          { time: timestamp, weight: value },
         ]);
         setLoadCellOn(value ? "ON" : "OFF");
       }
@@ -67,11 +80,11 @@ function App() {
 
   const allChecked = checkedItems.every(Boolean);
   useEffect(() => {
-    setTestDisabled(!(allChecked && loadCellOn));
+    setTestDisabled(!(allChecked && loadCellOn === "ON"));
   }, [allChecked, loadCellOn]);
 
   const handleTestClick = () => {
-    if (allChecked && loadCellOn) {
+    if (allChecked && loadCellOn === "ON") {
       setGraphRunning(true);
       setWeightHistory([]);
     }
@@ -84,12 +97,14 @@ function App() {
   // ---------------- FIRE BUTTON USING MQTT ----------------
   const handleIgnition = () => {
     if (!client || !isConnected) {
-      console.log("⚠️ MQTT not connected");
+      console.log("⚠️ MQTT not connected yet");
       return;
     }
 
-    client.publish(FIRE_TOPIC, "ON"); // Send fire command to Arduino
-    console.log("🔥 Fire command sent via MQTT");
+    client.publish(FIRE_TOPIC, "ON", (err) => {
+      if (err) console.log("❌ Publish error:", err);
+      else console.log("🔥 Fire command sent via MQTT");
+    });
   };
 
   // ---------------- JSX ----------------
