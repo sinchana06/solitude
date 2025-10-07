@@ -8,7 +8,7 @@ body {
 }
 
 .container {
-  max-width: 480px;
+  max-width: 500px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
@@ -82,6 +82,16 @@ body {
 
 /* Responsive for smaller screens */
 @media (max-width: 400px) {
+  .container {
+  max-width: 400px;
+  padding: 50px;
+}
+body {
+  margin: 0;
+  background-color: black;
+  color: white;
+  font-family: Arial, sans-serif;
+}
   .circle-btn {
     width: 60px;
     height: 60px;
@@ -94,5 +104,13 @@ body {
 
   .checklist li {
     font-size: 1em;
+  }
+  .weight-title-container{
+display: flex;
+align-items: center;
+  }
+  .weight-graph{
+    width: 300px !important;
+    height: 300px !important;
   }
 }
