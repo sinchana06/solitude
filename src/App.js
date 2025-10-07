@@ -73,7 +73,7 @@ if (!res.ok) throw new Error("No response from Arduino");
   }
   return (
     <div className="container">
-      <h1 className="heading">Solitude Christopher</h1>
+      <h1 className="heading">Solit Christopher</h1>
 
       <div className="load-cell-indicator">
         Load Cell: <span className={loadCellOn == 'ON'? "on" : "off"}>{loadCellOn}</span>
