@@ -46,7 +46,7 @@ const handleDownloadAllCSV = () => {
   const [client, setClient] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
 
-  const MQTT_BROKER = "ws://broker.hivemq.com:8000/mqtt"; // HiveMQ WebSocket
+  const MQTT_BROKER = "wss://broker.hivemq.com:8000/mqtt"; // HiveMQ WebSocket
   const WEIGHT_TOPIC = "arduino/sensor/weight";
   const FIRE_TOPIC = "arduino/relay/fire";
 
