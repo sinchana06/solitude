@@ -1,121 +1,71 @@
-/* src/App.css */
-body {
-  margin: 0;
-  padding: 0;
-  background-color: black;
-  color: white;
-  font-family: Arial, sans-serif;
-}
-
 .container {
-  max-width: 500px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
 }
-  .weight-title-container{
-display: flex;
-align-items: center;
-justify-content: center;
-  }
+
 .heading {
-  margin-top: 20px;
-  margin-bottom: 30px;
-  font-size: 1.8em;
-}
-
-.load-cell-indicator {
-  text-align: left;
   margin-bottom: 20px;
-  font-weight: bold;
-  font-size: 1.1em;
 }
 
-.on {
-  color: #00ff00;
-}
-
-.off {
-  color: #ff4d4d;
-}
-
-.checklist {
-  list-style: none;
-  padding-left: 0;
-  margin-bottom: 30px;
-}
-
-.checklist li {
-  margin: 12px 0;
-  text-align: left;
-  font-size: 1.1em;
-}
-
-.checklist input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-}
-
-.buttons {
+.module-container {
   display: flex;
-  justify-content: center;
-  gap: 20px;
+  gap: 10px;
+  transition: all 0.3s ease;
+  justify-content: center; /* center for zoom effect */
 }
 
-.circle-btn {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.circle-btn:hover:enabled {
-  background-color: #0056b3;
-}
-
-.circle-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Responsive for smaller screens */
-@media (max-width: 400px) {
-  .container {
-  max-width: 400px;
+.sub-container {
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 8px;
   padding: 20px;
+  cursor: pointer;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  transform-origin: center center; /* scale from center */
 }
-body {
-  margin: 0;
-  background-color: black;
+
+
+.full-view {
+  flex: 1 1 100%;
+  width: 80%;
+  height: 70vh; 
+  z-index: 10;
+  overflow: auto;
+  position: relative;
+
+  transform: scale(1); /* zoom in */
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3); /* optional for depth effect */
+}
+
+.hidden {
+  display: none;
+}
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: #333;
   color: white;
-  font-family: Arial, sans-serif;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  z-index: 100;
+  transition: background-color 0.2s ease;
 }
-  .circle-btn {
-    width: 60px;
-    height: 60px;
-    font-size: 14px;
-  }
 
-  .heading {
-    font-size: 1.5em;
-  }
+.back-button:hover {
+  background-color: #555;
+}
 
-  .checklist li {
-    font-size: 1em;
-  }
-  .weight-title-container{
-display: flex;
-align-items: center;
-justify-content: flex-start;
-  }
-  .weight-graph{
-    width: 300px !important;
-    height: 300px !important;
-  }
+.module-container.expanded {
+  position: relative;
+  cursor: none;
+}
+.sub-container.full-view{
+  cursor:auto
+}
+.full-view {
+  position: relative;
 }
