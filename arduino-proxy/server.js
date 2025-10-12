@@ -1,23 +1,32 @@
-import express from 'express';
-import fetch from 'node-fetch';
-import cors from 'cors';
+import mqtt from 'mqtt';
 
-const app = express();
-app.use(cors()); // allow your React app to call this
+const MQTT_BROKER = 'ws://broker.hivemq.com:8000/mqtt';
+const WEIGHT_TOPIC = 'arduino/sensor/weight';
+const FIRE_TOPIC = 'arduino/relay/fire';
 
-const ARDUINO_IP = 'http://10.135.29.173'; // your local Arduino IP
+const client = mqtt.connect(MQTT_BROKER);
 
-app.get('/api/weight', async (req, res) => {
-  try {
-    const response = await fetch(ARDUINO_IP);
-    const data = await response.json();
-    res.json(data);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to fetch from Arduino' });
-  }
+client.on('connect', () => {
+  console.log('Connected to MQTT broker');
+  client.subscribe([WEIGHT_TOPIC, FIRE_TOPIC], () => {
+    // Simulate publishing weight and fire messages
+    setInterval(() => {
+      const weight = (Math.random() * 1000).toFixed(2);
+      client.publish(WEIGHT_TOPIC, weight);
+      console.log(`Published weight: ${weight}`);
+    }, 2000);
+
+    setInterval(() => {
+      client.publish(FIRE_TOPIC, 'ON');
+      console.log('Published fire: ON');
+      setTimeout(() => {
+        client.publish(FIRE_TOPIC, 'OFF');
+        console.log('Published fire: OFF');
+      }, 1000);
+    }, 5000);
+  });
 });
 
-app.listen(process.env.PORT || 3001, () => {
-  console.log('Proxy server running', process.env.PORT);
+client.on('message', (topic, message) => {
+  console.log(`Received on ${topic}: ${message.toString()}`);
 });

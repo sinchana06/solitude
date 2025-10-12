@@ -8,12 +8,16 @@ body {
 }
 
 .container {
-  max-width: 480px;
+  max-width: 500px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
 }
-
+  .weight-title-container{
+display: flex;
+align-items: center;
+justify-content: center;
+  }
 .heading {
   margin-top: 20px;
   margin-bottom: 30px;
@@ -82,6 +86,16 @@ body {
 
 /* Responsive for smaller screens */
 @media (max-width: 400px) {
+  .container {
+  max-width: 400px;
+  padding: 20px;
+}
+body {
+  margin: 0;
+  background-color: black;
+  color: white;
+  font-family: Arial, sans-serif;
+}
   .circle-btn {
     width: 60px;
     height: 60px;
@@ -94,5 +108,14 @@ body {
 
   .checklist li {
     font-size: 1em;
+  }
+  .weight-title-container{
+display: flex;
+align-items: center;
+justify-content: flex-start;
+  }
+  .weight-graph{
+    width: 300px !important;
+    height: 300px !important;
   }
 }
