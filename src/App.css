@@ -8,8 +8,14 @@
   margin-bottom: 20px;
 }
 
+.main-module {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+}
 .module-container {
   display: flex;
+  flex: 0.5;
   gap: 10px;
   transition: all 0.3s ease;
   justify-content: center; /* center for zoom effect */
@@ -17,6 +23,7 @@
 
 .sub-container {
   flex: 1;
+  height: 50vh;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 20px;
